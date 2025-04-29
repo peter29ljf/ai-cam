@@ -17,26 +17,23 @@
 ### 现有功能
 - **手部监控**：使用摄像头实时监控手部动作，检测到手部消失后进行截图。
 - **截图保存**：将高清截图保存到指定目录，供后续处理使用。
+- **图片管理与编辑**：浏览、插入、删除、替换截图及页码管理。
 
 ### 未来扩展功能
 
-#### 1. 扫描页的修改功能
-- **功能描述**：允许用户对扫描的页进行编辑，包括插入、删除、替换模糊页等操作。
-- **扩展接口**：`image_processing.py` 模块中预留接口，用于接收和处理用户的编辑请求。
-
-#### 2. 图片生成 PDF
+#### 1. 图片生成 PDF
 - **功能描述**：将扫描的图片按顺序合并生成 PDF 文件。
 - **扩展接口**：`pdf_generation.py` 模块中预留接口，用于接收图片列表并生成 PDF。
 
-#### 3. OCR 转 Markdown
+#### 2. OCR 转 Markdown
 - **功能描述**：对图片进行 OCR 识别，将结果转换为 Markdown 格式，并传给大模型进行总结或对话。
 - **扩展接口**：`ocr_processing.py` 模块中预留接口，用于 OCR 处理和 Markdown 转换。
 
-#### 4. 生词表功能
+#### 3. 生词表功能
 - **功能描述**：收集扫描过程中识别的生词，生成生词表以供学习。
 - **扩展接口**：`vocabulary_builder.py` 模块中预留接口，用于记录和管理生词。
 
-#### 5. 与大模型交互
+#### 4. 与大模型交互
 - **功能描述**：在网页中新增一个标签页，用户可以上传 PDF 和图片文件，与大模型进行讨论和交互。
 - **前端实现**：
   - 新增标签页和文件上传控件。
@@ -60,6 +57,7 @@ project-root/
 │   ├── test_camera.html         # 测试页面
 │   ├── style.css                # 样式文件
 │   ├── app.js                   # 前端逻辑
+│   ├── imageManager.js          # 前端图片管理逻辑
 │   ├── server.js                # HTTPS 前端服务器脚本
 │   ├── package.json             # 依赖配置
 │   └── package-lock.json        # 锁定依赖文件
@@ -69,7 +67,7 @@ project-root/
 │   ├── ssl_main.py              # HTTPS后端服务器脚本
 │   ├── flip_monitor_mediapipe.py# 服务端监控脚本
 │   ├── hand_detection.py        # 手部检测逻辑
-│   ├── image_processing.py      # 图像处理模块（预留）
+│   ├── image_processing.py      # 图片管理模块
 │   ├── ocr_processing.py        # OCR处理模块（预留）
 │   ├── pdf_generation.py        # PDF生成模块（预留）
 │   ├── vocabulary_builder.py    # 生词表模块（预留）
