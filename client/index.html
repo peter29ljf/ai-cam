@@ -21,6 +21,7 @@
         <div class="tabs">
             <button class="tab-btn active" data-tab="monitor">实时监控</button>
             <button class="tab-btn" data-tab="ai">AI 交互</button>
+            <button class="tab-btn" data-tab="image-manager">图片管理</button>
         </div>
 
         <div class="tab-content">
@@ -64,9 +65,32 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 图片管理标签页 -->
+            <div id="image-manager" class="tab-pane">
+                <h2>截图管理</h2>
+                <div id="image-manager-container"></div>
+            </div>
         </div>
     </div>
 
     <script src="app.js"></script>
+    <script src="imageManager.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                document.getElementById(btn.dataset.tab).classList.add('active');
+                // 切换到图片管理时刷新
+                if (btn.dataset.tab === 'image-manager' && window.renderImageManager) {
+                    renderImageManager(document.getElementById('image-manager-container'));
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html> 

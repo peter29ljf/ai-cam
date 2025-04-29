@@ -2,6 +2,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = 8443;
@@ -14,6 +15,20 @@ const options = {
 
 // 静态文件服务
 app.use(express.static(path.join(__dirname)));
+
+// 代理 /shots 到后端 FastAPI
+app.use('/shots', createProxyMiddleware({
+  target: 'https://localhost:8000',
+  changeOrigin: true,
+  secure: false
+}));
+
+// 代理 /api 到后端 FastAPI
+app.use('/api', createProxyMiddleware({
+  target: 'https://localhost:8000',
+  changeOrigin: true,
+  secure: false
+}));
 
 // 启动HTTPS服务器
 const server = https.createServer(options, app);

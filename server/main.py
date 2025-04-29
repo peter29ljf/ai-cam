@@ -41,8 +41,15 @@ app.add_middleware(
 )
 
 # 创建截图目录
-SHOTS_DIR = Path("shots")
+SHOTS_DIR = Path(__file__).parent / "shots"
 SHOTS_DIR.mkdir(exist_ok=True)
+
+# 挂载截图静态目录
+app.mount("/shots", StaticFiles(directory=str(SHOTS_DIR)), name="shots")
+
+# 包含图片管理 API 路由
+from image_processing import router as image_router
+app.include_router(image_router, prefix="/api")
 
 # 创建手部检测器
 class HandDetector:
