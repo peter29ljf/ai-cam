@@ -3,6 +3,103 @@
 ## 版本记录
 - v1.0.1：新增 图片管理功能，包括浏览、删除、替换、插入截图页面，并支持页码管理。
 
+## 安装与使用指南
+
+### 环境要求
+
+- **前端**：Node.js v14+
+- **后端**：Python 3.8+
+- **系统**：支持 macOS, Linux 或 Windows
+- **浏览器**：Chrome, Firefox, Safari 等现代浏览器
+
+### 安装步骤
+
+1. **克隆仓库**
+
+   ```bash
+   git clone https://github.com/peter29ljf/ai-cam.git
+   cd ai-cam
+   ```
+
+2. **安装后端依赖**
+
+   ```bash
+   cd server
+   pip install -r requirements.txt
+   ```
+
+3. **安装前端依赖**
+
+   ```bash
+   cd ../client
+   npm install
+   ```
+
+4. **生成 SSL 证书**（参见下方 "SSL 证书生成说明"）
+
+### 启动服务
+
+1. **一键启动（推荐）**
+
+   ```bash
+   ./start_https.sh
+   ```
+   
+   > 注意：首次运行可能需要 `chmod +x start_https.sh` 授予执行权限
+
+2. **手动启动**
+
+   如需单独启动后端：
+   ```bash
+   cd server
+   python ssl_main.py
+   ```
+
+   如需单独启动前端：
+   ```bash
+   cd client
+   node server.js
+   ```
+
+3. **停止服务**
+
+   ```bash
+   ./stop_all_servers.sh
+   ```
+
+### 使用方法
+
+1. **访问应用**
+   - 本地访问：https://localhost:8443
+   - 远程访问：https://[您的IP地址]:8443
+
+2. **功能说明**
+   - **实时监控**：启动摄像头并监控手部动作
+   - **图片管理**：查看、编辑和管理截图
+   - **AI 交互**：上传文件与 AI 进行交互讨论
+
+3. **操作流程**
+   - 点击"开始监控"进入摄像头模式
+   - 手部出现→消失后自动截图并保存
+   - 切换到"图片管理"标签查看或编辑已保存的截图
+   - 使用"删除"、"替换"、"在后插入"等功能管理图片
+   - 点击"查看原图"可在新窗口中查看高清原图
+
+### 常见问题
+
+1. **无法访问摄像头**
+   - 确保已授予浏览器摄像头权限
+   - 使用 HTTPS 协议访问（非本地环境必须）
+   - 如仍有问题，尝试使用本地模式 `direct_demo.html`
+
+2. **HTTPS 证书警告**
+   - 属于正常现象（自签名证书）
+   - 点击"高级"→"继续访问"（具体提示因浏览器而异）
+
+3. **端口占用冲突**
+   - 使用 `stop_all_servers.sh` 停止旧进程
+   - 修改 `start_https.sh` 中的端口号（如需更改）
+
 ## 目标
 实现一个基于云端的手部监控系统，使用低画质视频流进行实时监控，高清画质进行截图，支持后续的 OCR 处理。
 
@@ -177,6 +274,31 @@ project-root/
 - 首次访问会出现安全警告（因为使用自签名证书），请点击"高级"然后选择"继续访问"
 - 确保防火墙未阻止8000和8443端口
 - 如果仍然无法访问摄像头，可以尝试使用本地模式（direct_demo.html） 
+
+## SSL 证书生成说明
+
+首次使用需要生成 SSL 证书，请按以下步骤操作：
+
+1. **创建 SSL 目录**：
+   ```bash
+   mkdir -p ssl
+   ```
+
+2. **生成自签名证书**：
+   ```bash
+   cd ssl
+   openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes \
+   -subj "/CN=localhost" -addext "subjectAltName = IP:192.168.1.101,DNS:localhost"
+   ```
+   > 注意：请将 IP 地址替换为您的本地 IP
+
+3. **证书权限设置**（如需要）：
+   ```bash
+   chmod 600 key.pem cert.pem
+   ```
+
+生成的证书会在首次访问 HTTPS 链接时提示不安全，请在浏览器中添加例外。
+证书有效期为 1 年，到期后需重新生成。
 
 ## 图片管理与编辑
 - **图片管理与编辑**：
