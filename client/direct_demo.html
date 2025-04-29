@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手部监控系统 - 本地模式</title>
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .instructions {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .screenshots {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .screenshots img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .copy-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-success {
+            margin-left: 10px;
+            color: #27ae60;
+            display: none;
+        }
+        .tip {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>手部监控系统</h1>
+    <h2>本地运行模式</h2>
+
+    <div class="container">
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <p>由于浏览器安全限制，在非 localhost 环境下无法访问摄像头。本页面提供了一个替代方案，使用本地 Python 脚本直接运行手部监控功能。</p>
+
+            <div class="tip">
+                <strong>提示：</strong> 这种方式更稳定且性能更好，适合于需要长时间监控或采集大量图像的场景。
+            </div>
+
+            <h3>⚙️ 操作步骤</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <p>确保您的电脑已安装 Python 环境（Python 3.7+）</p>
+            </div>
+            
+            <div class="tip" style="background-color: #E6F7FF; border-color: #1890FF;">
+                <strong>🔑 远程访问用户注意：</strong>
+                <p>通过IP地址访问时无法直接使用摄像头（浏览器安全限制）。请直接在本地运行Python脚本，效果更好且无限制。</p>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <p>安装必要的依赖包：</p>
+                <pre>pip install opencv-python mediapipe</pre>
+                <button class="copy-btn" data-text="pip install opencv-python mediapipe">复制</button>
+                <span class="copy-success">✓ 复制成功</span>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <p>在终端中执行以下命令启动监控程序：</p>
+                <pre>python3 flip_monitor_mediapipe.py --max-count 10 --shots-dir mp_shots</pre>
+                <button class="copy-btn" data-text="python3 flip_monitor_mediapipe.py --max-count 10 --shots-dir mp_shots">复制</button>
+                <span class="copy-success">✓ 复制成功</span>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <p>程序启动后，将自动监控手部动作：</p>
+                <ul>
+                    <li>当检测到<strong>手出现</strong>时，进入准备状态</li>
+                    <li>当<strong>手消失</strong>后，延迟 0.5 秒进行截图</li>
+                    <li>截图会保存到 <code>mp_shots</code> 目录下</li>
+                    <li>系统会发出提示音表示截图成功</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                <p>修改参数（可选）：</p>
+                <ul>
+                    <li><code>--max-count</code>：设置最大截图数量</li>
+                    <li><code>--shots-dir</code>：设置截图保存目录</li>
+                    <li><code>--min-detect-conf</code>：设置检测置信度阈值（0-1）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="screenshots">
+            <h3>🖼️ 实际效果说明</h3>
+            <p>程序运行时会显示摄像头画面，当检测到手部时会显示手部骨架，截图后会自动保存。</p>
+            
+            <div class="tip">
+                <strong>使用建议：</strong>
+                <ul>
+                    <li>相机画面保持稳定，避免晃动</li>
+                    <li>保持光线充足，提高检测准确率</li>
+                    <li>把手完全移出画面才会触发截图</li>
+                    <li>页面翻动速度不要太快，每次等待提示音后再翻下一页</li>
+                </ul>
+            </div>
+            
+            <div id="shotDisplay">
+                <p style="text-align: center; color: #666;">运行程序后，请查看 mp_shots 目录获取实际截图</p>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">返回主页面</a>
+    </div>
+
+    <script>
+        // 复制命令功能
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const text = this.getAttribute('data-text');
+                navigator.clipboard.writeText(text).then(() => {
+                    // 显示复制成功信息
+                    const successMsg = this.nextElementSibling;
+                    successMsg.style.display = 'inline';
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

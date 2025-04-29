@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手部监控系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>手部监控系统</h1>
+        </header>
+
+        <!-- 远程访问提示 -->
+        <div style="background-color: #E6F7FF; border-left: 4px solid #1890FF; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+            <strong>⚠️ 远程访问用户注意：</strong>
+            <p>通过IP地址访问时，浏览器安全限制会阻止摄像头访问。请使用<a href="direct_demo.html" style="font-weight: bold;">本地模式</a>获得更好体验。</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="monitor">实时监控</button>
+            <button class="tab-btn" data-tab="ai">AI 交互</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- 监控标签页 -->
+            <div id="monitor" class="tab-pane active">
+                <div class="camera-container">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+
+                <div class="controls">
+                    <button id="startBtn" class="control-btn">开始监控</button>
+                    <button id="stopBtn" class="control-btn" disabled>停止监控</button>
+                </div>
+
+                <div class="status">
+                    <p>状态: <span id="status">未连接</span></p>
+                    <p>截图数: <span id="shotCount">0</span></p>
+                </div>
+            </div>
+
+            <!-- AI 交互标签页 -->
+            <div id="ai" class="tab-pane">
+                <div class="ai-container">
+                    <h2>与 AI 讨论截图内容</h2>
+                    <div class="prompt-container">
+                        <textarea id="mainPrompt" placeholder="输入主提示词..."></textarea>
+                        <div class="preset-prompts">
+                            <button class="prompt-btn" data-prompt="总结这些图片的主要内容">总结内容</button>
+                            <button class="prompt-btn" data-prompt="分析这些图片中的关键观点">关键观点</button>
+                            <button class="prompt-btn" data-prompt="这些图片中有哪些专业术语？请解释它们">专业术语</button>
+                        </div>
+                    </div>
+                    <div class="file-upload">
+                        <input type="file" id="fileUpload" multiple accept="image/*,.pdf">
+                        <button id="uploadBtn">上传文件</button>
+                    </div>
+                    <div class="response-container">
+                        <h3>AI 响应</h3>
+                        <div id="aiResponse" class="response-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
