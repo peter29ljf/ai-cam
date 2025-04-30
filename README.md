@@ -100,6 +100,16 @@
    - 使用 `stop_all_servers.sh` 停止旧进程
    - 修改 `start_https.sh` 中的端口号（如需更改）
 
+4. **模块未找到错误**
+   - 错误: `Error: Cannot find module 'http-proxy-middleware'`
+   - 原因: 前端服务中使用了 `http-proxy-middleware`，但未安装该依赖
+   - 解决办法:
+     ```bash
+     cd client
+     npm install http-proxy-middleware --save
+     ```
+     然后重新运行 `./start_https.sh`
+
 ## 目标
 实现一个基于云端的手部监控系统，使用低画质视频流进行实时监控，高清画质进行截图，支持后续的 OCR 处理。
 
