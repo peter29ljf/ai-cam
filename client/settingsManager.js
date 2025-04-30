@@ -14,6 +14,8 @@ let customPromptNames;
 let customPromptContents;
 let saveSettingsBtn;
 let settingsStatus;
+let testApiBtn;
+let apiTestResult;
 
 // 模型映射前缀
 const MODEL_PREFIXES = {
@@ -37,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     customPromptContents = document.querySelectorAll('.custom-prompt-content');
     saveSettingsBtn = document.getElementById('save-settings');
     settingsStatus = document.getElementById('settings-status');
+    testApiBtn = document.getElementById('test-api-btn');
+    apiTestResult = document.getElementById('api-test-result');
 
     // 从服务器加载设置
     loadSettings();
@@ -57,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modelSelect.addEventListener('change', () => {
         updateModelFields();
     });
+    
+    // 添加测试API连接事件
+    testApiBtn.addEventListener('click', testApiConnection);
     
     // 更新AI标签页中的自定义提示词按钮
     updateCustomPromptButtons();
@@ -258,6 +265,48 @@ async function getActiveModelConfig() {
         apiEndpoint: settings[`${prefix}_API_ENDPOINT`] || '',
         autoSwitch: settings.MODEL_AUTO_SWITCH === 'true'
     };
+}
+
+/**
+ * 测试API连接
+ */
+async function testApiConnection() {
+    try {
+        const currentModel = modelSelect.value;
+        
+        apiTestResult.textContent = '正在测试...';
+        apiTestResult.style.color = '#1890ff';
+        
+        // 先保存当前设置
+        await saveSettings();
+        
+        if (currentModel === 'zhipu') {
+            // 测试智谱API
+            const response = await fetch('/api/zhipu/test_connection');
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                apiTestResult.textContent = `✅ ${result.message}`;
+                apiTestResult.style.color = '#52c41a';
+            } else {
+                apiTestResult.textContent = `❌ ${result.message}`;
+                apiTestResult.style.color = '#ff4d4f';
+            }
+        } else {
+            apiTestResult.textContent = `暂不支持测试 ${currentModel} 模型`;
+            apiTestResult.style.color = '#faad14';
+        }
+        
+        // 5秒后清除状态
+        setTimeout(() => {
+            apiTestResult.textContent = '';
+        }, 5000);
+        
+    } catch (error) {
+        console.error('API测试失败:', error);
+        apiTestResult.textContent = `❌ 测试失败: ${error.message}`;
+        apiTestResult.style.color = '#ff4d4f';
+    }
 }
 
 // 导出函数，以便在其他地方使用

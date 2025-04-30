@@ -115,21 +115,28 @@ h1 {
 /* AI 交互标签页样式 */
 .ai-container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.prompt-container {
-    margin-bottom: 20px;
-}
-
-#mainPrompt {
-    width: 100%;
-    padding: 10px;
+.response-container {
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 16px;
-    resize: vertical;
-    min-height: 100px;
+    padding: 15px;
     margin-bottom: 10px;
+}
+
+.response-content {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    min-height: 200px;
+}
+
+.prompt-buttons {
+    margin: 20px 0;
 }
 
 .preset-prompts {
@@ -149,39 +156,32 @@ h1 {
     font-size: 14px;
 }
 
-.file-upload {
-    margin-bottom: 20px;
+.prompt-input-container {
     display: flex;
-    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-#fileUpload {
-    flex: 1;
-    margin-right: 10px;
+#mainPrompt {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 80px;
 }
 
-#uploadBtn {
-    padding: 8px 15px;
+.send-btn {
+    padding: 10px 20px;
     background-color: #3498db;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.response-container {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-    margin-top: 20px;
-}
-
-.response-content {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    min-height: 200px;
+    font-size: 16px;
+    align-self: flex-start;
+    min-width: 80px;
 }
 
 /* 设置标签页样式 */
@@ -318,4 +318,65 @@ h1 {
 
 .settings-switch:checked + .switch-label::after {
     transform: translateX(20px);
+}
+
+.prompt-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prompt-actions button {
+    background-color: #ff9f1a;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.prompt-actions button:hover {
+    background-color: #ff7f00;
+}
+
+/* AI响应样式 */
+.ai-result {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.ai-model {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.ai-content {
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.ai-content pre {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.ai-content code {
+    font-family: monospace;
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.ai-content h1, 
+.ai-content h2, 
+.ai-content h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;
 } 

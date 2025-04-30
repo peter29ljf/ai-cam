@@ -20,7 +20,30 @@ async function fetchImages() {
 }
 
 async function deleteImage(page) {
-    await fetch(`${API_BASE}/${page}`, { method: 'DELETE' });
+    try {
+        // 先获取图片列表
+        const images = await fetchImages();
+        if (page < 1 || page > images.length) {
+            console.error('页码超出范围:', page);
+            return;
+        }
+        
+        // 获取对应的文件名
+        const filename = images[page-1];
+        
+        // 调用删除API
+        const response = await fetch(`${API_BASE}/${filename}`, { 
+            method: 'DELETE' 
+        });
+        
+        if (!response.ok) {
+            console.error('删除图片失败:', response.status);
+            alert(`删除图片失败: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('删除图片出错:', error);
+        alert(`删除图片出错: ${error.message}`);
+    }
 }
 
 async function replaceImage(page, file) {

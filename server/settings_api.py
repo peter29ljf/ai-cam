@@ -139,9 +139,18 @@ async def update_settings(settings: Settings) -> Dict[str, str]:
         # 将设置转换为字典并过滤掉空值
         settings_dict = {k: v for k, v in settings.dict().items() if v is not None}
         
+        # 特殊处理：确保API密钥格式正确
+        if 'ZHIPUAI_API_KEY' in settings_dict:
+            api_key = settings_dict['ZHIPUAI_API_KEY']
+            # 检查API密钥格式
+            if api_key and '.' not in api_key:
+                raise HTTPException(status_code=400, detail=f"智谱API密钥格式错误，应包含'.'分隔的ID和密钥")
+        
         # 写入.env文件
         write_env_file(settings_dict)
         
         return {"msg": "设置已保存"}
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"无法保存设置: {str(e)}") 

@@ -48,21 +48,33 @@
             <div id="ai" class="tab-pane">
                 <div class="ai-container">
                     <h2>与 AI 讨论截图内容</h2>
-                    <div class="prompt-container">
-                        <textarea id="mainPrompt" placeholder="输入主提示词..."></textarea>
+                    
+                    <!-- AI响应区域（放在顶部） -->
+                    <div class="response-container">
+                        <h3>AI 响应</h3>
+                        <div id="aiResponse" class="response-content"></div>
+                    </div>
+                    
+                    <!-- 自定义提示词按钮（放在中间） -->
+                    <div class="prompt-buttons">
                         <div class="preset-prompts">
                             <button class="prompt-btn" data-prompt="总结这些图片的主要内容">总结内容</button>
                             <button class="prompt-btn" data-prompt="分析这些图片中的关键观点">关键观点</button>
                             <button class="prompt-btn" data-prompt="这些图片中有哪些专业术语？请解释它们">专业术语</button>
                         </div>
                     </div>
-                    <div class="file-upload">
-                        <input type="file" id="fileUpload" multiple accept="image/*,.pdf">
-                        <button id="uploadBtn">上传文件</button>
+                    
+                    <!-- 文件选择与上传全部截图操作按钮 -->
+                    <div class="prompt-actions">
+                        <input type="file" id="fileUpload" multiple accept="image/*,.pdf" style="display:none" />
+                        <button id="selectFilesBtn" class="prompt-btn">选择文件</button>
+                        <button id="uploadAllBtn" class="prompt-btn">上传全部截图</button>
                     </div>
-                    <div class="response-container">
-                        <h3>AI 响应</h3>
-                        <div id="aiResponse" class="response-content"></div>
+                    
+                    <!-- 提示词输入区域（放在底部） -->
+                    <div class="prompt-input-container">
+                        <textarea id="mainPrompt" placeholder="输入提示词..."></textarea>
+                        <button id="sendPromptBtn" class="send-btn">发送</button>
                     </div>
                 </div>
             </div>
@@ -99,7 +111,8 @@
                         </div>
                         <div class="form-group">
                             <label for="model-name">模型名称</label>
-                            <input type="text" id="model-name" class="settings-input" placeholder="例如：deepseek-chat-r1">
+                            <input type="text" id="model-name" class="settings-input" placeholder="例如：glm-4v-plus-0111">
+                            <small>智谱视觉模型推荐：glm-4v-plus-0111、glm-4v-flash(免费)</small>
                         </div>
                         <div class="form-group">
                             <label for="api-key">API密钥</label>
@@ -108,6 +121,10 @@
                         <div class="form-group">
                             <label for="api-endpoint">访问节点</label>
                             <input type="text" id="api-endpoint" class="settings-input" placeholder="输入API访问节点">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="test-api-btn" class="btn-primary">测试API连接</button>
+                            <span id="api-test-result"></span>
                         </div>
                         <div class="form-group">
                             <label for="model-switch">模型切换开关</label>

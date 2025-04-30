@@ -20,8 +20,13 @@ client/node_modules/
 # 忽略环境变量配置文件
 .env
 
+pic
+
+server/temp/
+
 # 忽略截图目录
 server/shots/
+shots/
 
 # 忽略本地脚本和文档
 success_code.md

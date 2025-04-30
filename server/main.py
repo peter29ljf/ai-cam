@@ -55,6 +55,14 @@ app.include_router(image_router, prefix="/api")
 from settings_api import router as settings_router
 app.include_router(settings_router, prefix="/api")
 
+# 导入智谱API路由
+try:
+    from zhipu_api import router as zhipu_router
+    app.include_router(zhipu_router)
+    logger.info("智谱API路由已加载")
+except ImportError as e:
+    logger.error(f"导入智谱API路由失败: {str(e)}")
+
 # 创建手部检测器
 class HandDetector:
     def __init__(self, 
@@ -131,9 +139,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 state = 1
                 await manager.send_message("手势已检测", websocket)
             elif state == 1 and not has_hand:
-                # 延时0.5秒，确保手真的离开
+                # 延时2秒，确保手真的离开
                 await websocket.send_text("手部消失，准备截图...")
-                time.sleep(0.5)
+                time.sleep(2.0)
                 
                 # 请求高清截图
                 await websocket.send_text("请发送高清截图")
