@@ -5,8 +5,18 @@ const IMAGE_BASE = '/shots';
 
 async function fetchImages() {
     // 添加时间戳防止缓存
-    const res = await fetch(`${API_BASE}?t=${Date.now()}`);
-    return await res.json();
+    try {
+        const res = await fetch(`${API_BASE}?t=${Date.now()}`);
+        if (!res.ok) {
+            console.error('API 请求失败:', res.status);
+            return []; // 出错时返回空数组
+        }
+        const data = await res.json();
+        return Array.isArray(data) ? data : []; // 确保返回数组
+    } catch (error) {
+        console.error('获取图片列表失败:', error);
+        return []; // 出错时返回空数组
+    }
 }
 
 async function deleteImage(page) {
@@ -23,6 +33,14 @@ async function insertImage(page, file) {
     const formData = new FormData();
     formData.append('file', file);
     await fetch(`${API_BASE}/insert/${page}`, { method: 'POST', body: formData });
+}
+
+// 添加新图片：在最后插入
+async function addImage(file) {
+    // 获取当前图片列表长度，用作插入位置
+    const images = await fetchImages();
+    const page = images.length;  // 在末尾插入
+    await insertImage(page, file);
 }
 
 function renderImageManager(container) {
@@ -77,4 +95,39 @@ function renderImageManager(container) {
     });
 }
 
-window.renderImageManager = renderImageManager; 
+window.renderImageManager = renderImageManager;
+
+// 统一绑定删除所有、添加按钮事件
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteAllBtn = document.getElementById('delete-all-btn');
+    const addBtn = document.getElementById('add-btn');
+    const addInput = document.getElementById('add-input');
+    const container = document.getElementById('image-manager-container');
+    if (deleteAllBtn && window.renderImageManager) {
+        deleteAllBtn.addEventListener('click', async () => {
+            if (confirm('确定要删除所有图片吗？')) {
+                await deleteAllImages();
+                renderImageManager(container);
+            }
+        });
+    }
+    if (addBtn && addInput && window.renderImageManager) {
+        addBtn.addEventListener('click', () => addInput.click());
+        addInput.addEventListener('change', async (e) => {
+            if (e.target.files.length) {
+                await addImage(e.target.files[0]);
+                renderImageManager(container);
+                addInput.value = '';
+            }
+        });
+    }
+});
+
+// 删除所有图片
+async function deleteAllImages() {
+    try {
+        await fetch(API_BASE, { method: 'DELETE' });
+    } catch (error) {
+        console.error('删除所有图片失败:', error);
+    }
+} 

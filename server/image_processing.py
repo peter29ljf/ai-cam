@@ -2,7 +2,7 @@ import os
 import shutil
 import io
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from typing import List
+from typing import List, Dict
 from PIL import Image
 
 SHOTS_DIR = os.path.join(os.path.dirname(__file__), 'shots')
@@ -59,4 +59,12 @@ def insert_image(page: int, file: UploadFile = File(...)):
     file.file.seek(0)
     img = Image.open(file.file)
     img.save(dest, format='PNG')
-    return {'msg': '插入成功'} 
+    return {'msg': '插入成功'}
+
+@router.delete('/images')
+def delete_all_images() -> Dict[str, str]:
+    """删除所有截图文件"""
+    files = get_sorted_images()
+    for f in files:
+        os.remove(os.path.join(SHOTS_DIR, f))
+    return {'msg': '已删除所有图片'} 
