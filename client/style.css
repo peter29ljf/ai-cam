@@ -182,4 +182,140 @@ h1 {
     background-color: #f9f9f9;
     border-radius: 5px;
     min-height: 200px;
+}
+
+/* 设置标签页样式 */
+.settings-section {
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.settings-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.settings-textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    width: 100%;
+}
+
+.custom-prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.custom-prompt-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.custom-prompt-name {
+    font-weight: 500;
+}
+
+.settings-actions {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#settings-status {
+    font-size: 14px;
+}
+
+/* 开关样式 */
+.switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.settings-switch {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-label {
+    position: relative;
+    display: inline-block;
+    padding-left: 50px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.switch-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+.switch-label::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.settings-switch:checked + .switch-label::before {
+    background-color: #52c41a;
+}
+
+.settings-switch:checked + .switch-label::after {
+    transform: translateX(20px);
 } 

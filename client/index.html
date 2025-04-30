@@ -22,6 +22,7 @@
             <button class="tab-btn active" data-tab="monitor">实时监控</button>
             <button class="tab-btn" data-tab="ai">AI 交互</button>
             <button class="tab-btn" data-tab="image-manager">图片管理</button>
+            <button class="tab-btn" data-tab="settings">设置</button>
         </div>
 
         <div class="tab-content">
@@ -77,11 +78,96 @@
                 <input type="file" id="add-input" accept="image/*" style="display:none" />
                 <div id="image-manager-container"></div>
             </div>
+            
+            <!-- 设置标签页 -->
+            <div id="settings" class="tab-pane">
+                <h2>系统设置</h2>
+                
+                <!-- AI模型设置部分 -->
+                <div class="settings-section">
+                    <h3>AI模型设置</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="model-select">选择模型</label>
+                            <select id="model-select" class="settings-input">
+                                <option value="deepseek">Deepseek</option>
+                                <option value="zhipu">智谱</option>
+                                <option value="openai">OpenAI</option>
+                                <option value="ollama">Ollama</option>
+                                <option value="lmstudio">LM Studio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="model-name">模型名称</label>
+                            <input type="text" id="model-name" class="settings-input" placeholder="例如：deepseek-chat-r1">
+                        </div>
+                        <div class="form-group">
+                            <label for="api-key">API密钥</label>
+                            <input type="password" id="api-key" class="settings-input" placeholder="输入API密钥">
+                        </div>
+                        <div class="form-group">
+                            <label for="api-endpoint">访问节点</label>
+                            <input type="text" id="api-endpoint" class="settings-input" placeholder="输入API访问节点">
+                        </div>
+                        <div class="form-group">
+                            <label for="model-switch">模型切换开关</label>
+                            <div class="switch-container">
+                                <input type="checkbox" id="model-switch" class="settings-switch">
+                                <label for="model-switch" class="switch-label">启用自动模型切换</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词设置部分 -->
+                <div class="settings-section">
+                    <h3>提示词设置</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="main-system-prompt">主提示词</label>
+                            <textarea id="main-system-prompt" class="settings-textarea" placeholder="输入提交图片给AI时的系统提示词..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>自定义提示词</label>
+                            <div class="custom-prompts">
+                                <div class="custom-prompt-item">
+                                    <input type="text" class="custom-prompt-name settings-input" placeholder="按钮名称" data-index="0">
+                                    <textarea class="custom-prompt-content settings-textarea" placeholder="提示词内容" data-index="0"></textarea>
+                                </div>
+                                <div class="custom-prompt-item">
+                                    <input type="text" class="custom-prompt-name settings-input" placeholder="按钮名称" data-index="1">
+                                    <textarea class="custom-prompt-content settings-textarea" placeholder="提示词内容" data-index="1"></textarea>
+                                </div>
+                                <div class="custom-prompt-item">
+                                    <input type="text" class="custom-prompt-name settings-input" placeholder="按钮名称" data-index="2">
+                                    <textarea class="custom-prompt-content settings-textarea" placeholder="提示词内容" data-index="2"></textarea>
+                                </div>
+                                <div class="custom-prompt-item">
+                                    <input type="text" class="custom-prompt-name settings-input" placeholder="按钮名称" data-index="3">
+                                    <textarea class="custom-prompt-content settings-textarea" placeholder="提示词内容" data-index="3"></textarea>
+                                </div>
+                                <div class="custom-prompt-item">
+                                    <input type="text" class="custom-prompt-name settings-input" placeholder="按钮名称" data-index="4">
+                                    <textarea class="custom-prompt-content settings-textarea" placeholder="提示词内容" data-index="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保存按钮 -->
+                <div class="settings-actions">
+                    <button id="save-settings" class="control-btn" style="background:#52c41a;color:#fff;">保存设置</button>
+                    <span id="settings-status" style="margin-left: 10px;"></span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script src="imageManager.js"></script>
+    <script src="settingsManager.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.tab-btn').forEach(btn => {

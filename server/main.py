@@ -51,6 +51,10 @@ app.mount("/shots", StaticFiles(directory=str(SHOTS_DIR)), name="shots")
 from image_processing import router as image_router
 app.include_router(image_router, prefix="/api")
 
+# 导入设置API路由
+from settings_api import router as settings_router
+app.include_router(settings_router, prefix="/api")
+
 # 创建手部检测器
 class HandDetector:
     def __init__(self, 

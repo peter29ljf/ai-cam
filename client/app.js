@@ -187,7 +187,7 @@ function initMonitorPage() {
  * 初始化 AI 交互页面
  */
 function initAIPage() {
-    const promptBtns = document.querySelectorAll('.prompt-btn');
+    const promptBtns = document.querySelectorAll('.prompt-btn:not(.custom-prompt-btn)');
     const mainPrompt = document.getElementById('mainPrompt');
     const uploadBtn = document.getElementById('uploadBtn');
     
@@ -199,10 +199,59 @@ function initAIPage() {
     });
     
     // 上传按钮
-    uploadBtn.addEventListener('click', () => {
-        // 这里后续会实现上传逻辑和 Deepseek API 的调用
+    uploadBtn.addEventListener('click', async () => {
+        // 获取文件和提示词
+        const fileInput = document.getElementById('fileUpload');
+        const files = fileInput.files;
+        const prompt = mainPrompt.value.trim();
+        
+        if (files.length === 0) {
+            alert('请选择至少一个文件');
+            return;
+        }
+        
+        // 设置加载状态
         const aiResponse = document.getElementById('aiResponse');
-        aiResponse.textContent = '文件上传和 AI 处理功能将在下一阶段实现...';
+        aiResponse.textContent = '正在处理，请稍候...';
+        
+        try {
+            // 获取当前激活的模型配置
+            const modelConfig = await window.getActiveModelConfig();
+            
+            // 这里后续会实现与选择的AI模型API的集成
+            // 根据 modelConfig.model 和 modelConfig.autoSwitch 决定使用哪个模型
+            
+            aiResponse.innerHTML = `
+                <p><strong>处理完成</strong></p>
+                <p>使用模型: ${modelConfig.model} (${modelConfig.modelName || '未指定'})</p>
+                <p>API密钥: ${modelConfig.apiKey ? '已配置' : '未配置'}</p>
+                <p>访问节点: ${modelConfig.apiEndpoint || '未配置'}</p>
+                <p>提示词: ${prompt || '未提供'}</p>
+                <p>文件数量: ${files.length}</p>
+                <p>自动切换: ${modelConfig.autoSwitch ? '启用' : '禁用'}</p>
+                <p>此功能将在后续更新中完全实现。</p>
+            `;
+            
+            // 根据不同模型的处理逻辑（未来实现）
+            /*
+            switch(modelConfig.model) {
+                case 'deepseek':
+                    // 调用Deepseek API
+                    break;
+                case 'zhipu':
+                    // 调用智谱API
+                    break;
+                case 'openai':
+                    // 调用OpenAI API
+                    break;
+                // 其他模型...
+            }
+            */
+            
+        } catch (error) {
+            console.error('AI处理错误:', error);
+            aiResponse.textContent = `处理出错: ${error.message}`;
+        }
     });
 }
 
