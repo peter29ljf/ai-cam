@@ -9,14 +9,17 @@ import uuid
 import logging
 from pathlib import Path
 from typing import List, Dict, Any
+import json
 
 import cv2
 import numpy as np
 import mediapipe as mp
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, UploadFile, File, Form, Response
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+import subprocess
+import shutil
 
 # MediaPipe 手部检测
 mp_hands = mp.solutions.hands
@@ -41,11 +44,12 @@ app.add_middleware(
 )
 
 # 创建截图目录
-SHOTS_DIR = Path(__file__).parent / "shots"
-SHOTS_DIR.mkdir(exist_ok=True)
+SHOTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "shots")
+# 设置输出目录路径
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output")
 
 # 挂载截图静态目录
-app.mount("/shots", StaticFiles(directory=str(SHOTS_DIR)), name="shots")
+app.mount("/shots", StaticFiles(directory=SHOTS_DIR), name="shots")
 
 # 包含图片管理 API 路由
 from image_processing import router as image_router
@@ -56,12 +60,10 @@ from settings_api import router as settings_router
 app.include_router(settings_router, prefix="/api")
 
 # 导入智谱API路由
-try:
-    from zhipu_api import router as zhipu_router
-    app.include_router(zhipu_router)
+if os.path.exists(os.path.join(os.path.dirname(__file__), "zhipu_api.py")):
+    from zhipu_api import setup_zhipu_api
+    setup_zhipu_api(app)
     logger.info("智谱API路由已加载")
-except ImportError as e:
-    logger.error(f"导入智谱API路由失败: {str(e)}")
 
 # 创建手部检测器
 class HandDetector:
@@ -168,6 +170,206 @@ async def websocket_endpoint(websocket: WebSocket):
         logger.error(f"WebSocket处理错误: {str(e)}")
         manager.disconnect(websocket)
 
+# 获取 output 目录下的文件夹列表
+@app.get("/api/output-folders")
+async def get_output_folders():
+    """获取输出目录下的所有文件夹"""
+    try:
+        # 确保输出目录存在
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        
+        # 获取所有文件夹列表（不包括文件）
+        folders = [name for name in os.listdir(OUTPUT_DIR) 
+                  if os.path.isdir(os.path.join(OUTPUT_DIR, name)) and not name.startswith('.')]
+        
+        return folders
+    except Exception as e:
+        logger.error(f"获取输出文件夹列表出错: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"获取文件夹列表失败: {str(e)}")
+
+# 删除指定的 output 文件夹
+@app.delete("/api/output-folders/{folder_name}")
+async def delete_output_folder(folder_name: str):
+    """删除指定的输出文件夹及其内容"""
+    try:
+        folder_path = os.path.join(OUTPUT_DIR, folder_name)
+        
+        # 安全检查：确保路径在 OUTPUT_DIR 内
+        if not os.path.abspath(folder_path).startswith(os.path.abspath(OUTPUT_DIR)):
+            raise HTTPException(status_code=403, detail="路径安全检查失败")
+        
+        if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
+            raise HTTPException(status_code=404, detail=f"文件夹 '{folder_name}' 不存在")
+        
+        # 删除文件夹及其所有内容
+        shutil.rmtree(folder_path)
+        
+        return {"success": True, "message": f"文件夹 '{folder_name}' 已删除"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"删除文件夹出错: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"删除文件夹失败: {str(e)}")
+
+# 执行 process_images.py 脚本
+@app.post("/api/process-images")
+async def process_images(mode: str = "extract"):
+    """
+    执行图片处理脚本
+    
+    参数:
+    - mode: 操作模式，可选值为 "extract"(提取文字) 或 "summary"(生成文档)
+    """
+    try:
+        script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "process_images.py")
+        
+        # 检查脚本文件是否存在
+        if not os.path.exists(script_path):
+            raise HTTPException(status_code=404, detail="处理脚本文件不存在")
+        
+        # 检查模式参数
+        if mode not in ["extract", "summary"]:
+            raise HTTPException(status_code=400, detail=f"无效的模式: {mode}，可选值为 extract 或 summary")
+        
+        # 执行脚本，传递模式参数
+        result = subprocess.run(["python3", script_path, f"--mode={mode}"], 
+                               capture_output=True, 
+                               text=True, 
+                               check=False)
+        
+        # 检查执行结果
+        if result.returncode == 0:
+            # 脚本执行成功
+            if mode == "extract":
+                message = "文字提取成功"
+            else:
+                message = "文档生成成功"
+                
+            return {
+                "success": True, 
+                "message": message,
+                "mode": mode,
+                "stdout": result.stdout,
+                "stderr": result.stderr
+            }
+        else:
+            # 脚本执行失败
+            return {
+                "success": False,
+                "message": f"处理失败，退出代码: {result.returncode}",
+                "mode": mode,
+                "stdout": result.stdout,
+                "stderr": result.stderr
+            }
+    except subprocess.SubprocessError as e:
+        logger.error(f"脚本执行错误: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"脚本执行错误: {str(e)}")
+    except Exception as e:
+        logger.error(f"处理图片出错: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"处理图片失败: {str(e)}")
+
+@app.get("/api/folder-content/{folder_name}")
+async def get_folder_content(folder_name: str):
+    """获取指定文件夹中的Markdown文件内容和对话历史"""
+    try:
+        folder_path = os.path.join(OUTPUT_DIR, folder_name)
+        
+        # 安全检查：确保路径在 OUTPUT_DIR 内
+        if not os.path.abspath(folder_path).startswith(os.path.abspath(OUTPUT_DIR)):
+            raise HTTPException(status_code=403, detail="路径安全检查失败")
+        
+        if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
+            raise HTTPException(status_code=404, detail=f"文件夹 '{folder_name}' 不存在")
+        
+        # 查找 Markdown 文件
+        md_content = ""
+        for file in os.listdir(folder_path):
+            if file.endswith('.md'):
+                md_file_path = os.path.join(folder_path, file)
+                try:
+                    with open(md_file_path, 'r', encoding='utf-8') as f:
+                        md_content = f.read()
+                    break  # 找到第一个 Markdown 文件即停止
+                except Exception as e:
+                    logger.error(f"读取Markdown文件出错: {str(e)}")
+        
+        # 查找或创建 conversation_history.json 文件
+        history_file_path = os.path.join(folder_path, 'conversation_history.json')
+        conversation_history = []
+        
+        if os.path.exists(history_file_path):
+            try:
+                with open(history_file_path, 'r', encoding='utf-8') as f:
+                    conversation_history = json.load(f)
+            except Exception as e:
+                logger.error(f"读取对话历史文件出错: {str(e)}")
+        
+        return {
+            "document_content": md_content,
+            "conversation_history": conversation_history
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"获取文件夹内容出错: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"获取文件夹内容失败: {str(e)}")
+
+@app.post("/api/update-conversation/{folder_name}")
+async def update_conversation(folder_name: str, data: dict):
+    """更新指定文件夹中的对话历史"""
+    try:
+        folder_path = os.path.join(OUTPUT_DIR, folder_name)
+        
+        # 安全检查：确保路径在 OUTPUT_DIR 内
+        if not os.path.abspath(folder_path).startswith(os.path.abspath(OUTPUT_DIR)):
+            raise HTTPException(status_code=403, detail="路径安全检查失败")
+        
+        if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
+            raise HTTPException(status_code=404, detail=f"文件夹 '{folder_name}' 不存在")
+        
+        # 获取用户输入和AI响应
+        user_input = data.get("user_input")
+        ai_response = data.get("ai_response")
+        
+        if not user_input or not ai_response:
+            raise HTTPException(status_code=400, detail="缺少必要的对话内容")
+        
+        # 更新对话历史
+        history_file_path = os.path.join(folder_path, 'conversation_history.json')
+        conversation_history = []
+        
+        # 如果文件存在，先读取现有内容
+        if os.path.exists(history_file_path):
+            try:
+                with open(history_file_path, 'r', encoding='utf-8') as f:
+                    conversation_history = json.load(f)
+            except Exception as e:
+                logger.error(f"读取对话历史文件出错: {str(e)}")
+        
+        # 添加新的对话记录
+        conversation_history.append({
+            "role": "user",
+            "content": user_input
+        })
+        conversation_history.append({
+            "role": "assistant",
+            "content": ai_response
+        })
+        
+        # 保存更新后的对话历史
+        try:
+            with open(history_file_path, 'w', encoding='utf-8') as f:
+                json.dump(conversation_history, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            logger.error(f"保存对话历史文件出错: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"保存对话历史失败: {str(e)}")
+        
+        return {"success": True, "message": "对话历史已更新"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"更新对话历史出错: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"更新对话历史失败: {str(e)}")
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 
+    uvicorn.run(app, host="0.0.0.0", port=8000) 

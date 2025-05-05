@@ -125,7 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteAllBtn = document.getElementById('delete-all-btn');
     const addBtn = document.getElementById('add-btn');
     const addInput = document.getElementById('add-input');
+    const processImagesBtn = document.getElementById('process-images-btn');
     const container = document.getElementById('image-manager-container');
+    
     if (deleteAllBtn && window.renderImageManager) {
         deleteAllBtn.addEventListener('click', async () => {
             if (confirm('确定要删除所有图片吗？')) {
@@ -134,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
     if (addBtn && addInput && window.renderImageManager) {
         addBtn.addEventListener('click', () => addInput.click());
         addInput.addEventListener('change', async (e) => {
@@ -141,6 +144,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 await addImage(e.target.files[0]);
                 renderImageManager(container);
                 addInput.value = '';
+            }
+        });
+    }
+    
+    // 处理图片按钮点击事件
+    if (processImagesBtn) {
+        processImagesBtn.addEventListener('click', async () => {
+            // 显示处理中状态
+            processImagesBtn.disabled = true;
+            processImagesBtn.textContent = '文字提取中...';
+            
+            try {
+                // 第一步：提取文字
+                let response = await fetch('/api/process-images?mode=extract', {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`文字提取失败: ${response.status}`);
+                }
+                
+                let result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(`文字提取失败: ${result.message || '未知错误'}`);
+                }
+                
+                // 第二步：生成文档
+                processImagesBtn.textContent = '生成文档中...';
+                
+                response = await fetch('/api/process-images?mode=summary', {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`生成文档失败: ${response.status}`);
+                }
+                
+                result = await response.json();
+                
+                if (result.success) {
+                    alert(`处理成功: 文档已生成`);
+                } else {
+                    alert(`生成文档失败: ${result.message || '未知错误'}`);
+                }
+            } catch (error) {
+                console.error('处理图片出错:', error);
+                alert(`处理图片出错: ${error.message}`);
+            } finally {
+                // 恢复按钮状态
+                processImagesBtn.disabled = false;
+                processImagesBtn.textContent = '处理图片';
             }
         });
     }

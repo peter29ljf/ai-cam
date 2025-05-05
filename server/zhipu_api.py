@@ -12,11 +12,20 @@ import requests
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
+from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 # 路由器
 router = APIRouter(prefix="/api/zhipu", tags=["zhipu"])
+
+# 设置 FastAPI 应用路由
+def setup_zhipu_api(app: FastAPI):
+    """
+    将智谱 API 路由器添加到 FastAPI 应用
+    """
+    app.include_router(router)
+    print("智谱API路由已加载")
 
 # 加载环境变量
 load_dotenv()

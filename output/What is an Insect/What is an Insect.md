@@ -1,0 +1,171 @@
+# What is an Insect?
+
+第1页：
+BUGS ARE INSECTS
+
+There are many kinds of insects living all around us. Ants are insects. So are crickets and mosquitoes. So are butterflies and bees.
+
+Insects come in many shapes, sizes, and colors. They don’t all look alike, but there's a way to tell if something is an insect. Count its legs. Count how many parts make up its body.
+
+Is a ladybug an insect?
+All insects have external skeletons. You have a hard skeleton inside, with parts that move. Your skeleton holds you up and helps give your body its shape. But an insect has a hard skeleton on the outside, with parts that move. The skeleton is like a shell around its body. It holds the insect up and gives its body its shape.
+A ladybug has an external skeleton. Does that mean it’s an insect?
+
+Maybe not. All insects have external skeletons, but not all animals with external skeletons are insects. Crabs, lobsters, shrimps, and scorpions have external skeletons too, but they are not insects.
+
+Many insects have two pairs of wings and a pair of antennae. Sometimes the antennae are long, like those of crickets or butterflies. Sometimes they are short.
+
+But all insect bodies are divided into three parts: head, thorax, and abdomen. There are six legs attached to the thorax. Anything that has six legs and three body parts is an insect. A ladybug has six legs and three body parts. Is it an insect?
+
+Now look at a spider. Is it an insect? It has an external skeleton. But count its legs. How many does it have? Now count how many body parts it has.
+A spider has eight legs, not six. Its body is divided into two parts, not three. So it is not an insect. A spider is an arachnid. Scorpions and daddy longlegs are arachnids too.
+
+Now we know that a ladybug is an insect. But is it really a bug?
+We sometimes call insects bugs. Many people think the two words mean the same thing, but they don’t. A bug is an insect with a mouth like a beak and a head that forms a triangle. A stinkbug is a bug. So is a bedbug, and so is a water strider, even though it doesn't have the word "bug" in its name.
+
+But a ladybug’s mouth doesn’t look like a beak. Its head isn’t shaped like a triangle. A ladybug isn’t a bug at all! It is a beetle. Beetles are insects with a pair of hard wings you can’t see through that hides a second pair of clear wings. The hard wings make a straight line down the top of the abdomen when they are closed.
+
+第2页：
+BUGS ARE INSECTS
+
+There are many kinds of insects living all around us. Ants are insects. So are crickets and mosquitoes. So are butterflies and bees.
+
+Insects come in many shapes, sizes, and colors. They don’t all look alike, but there's a way to tell if something is an insect. Count its legs. Count how many parts make up its body.
+
+Is a ladybug an insect?
+All insects have external skeletons. You have a hard skeleton inside, with parts that move. Your skeleton holds you up and helps give your body its shape. But an insect has a hard skeleton on the outside, with parts that move. The skeleton is like a shell around its body. It holds the insect up and gives its body its shape.
+A ladybug has an external skeleton. Does that mean it’s an insect?
+
+Maybe not. All insects have external skeletons, but not all animals with external skeletons are insects. Crabs, lobsters, shrimps, and scorpions have external skeletons too, but they are not insects.
+
+Many insects have two pairs of wings and a pair of antennae. Sometimes the antennae are long, like those of crickets or butterflies. Sometimes they are short.
+
+But all insect bodies are divided into three parts: head, thorax, and abdomen. There are six legs attached to the thorax. Anything that has six legs and three body parts is an insect. A ladybug has six legs and three body parts. Is it an insect?
+
+Now look at a spider. Is it an insect? It has an external skeleton. But count its legs. How many does it have? Now count how many body parts it has.
+A spider has eight legs, not six. Its body is divided into two parts, not three. So it is not an insect. A spider is an arachnid. Scorpions and daddy longlegs are arachnids too.
+
+Now we know that a ladybug is an insect. But is it really a bug?
+We sometimes call insects bugs. Many people think the two words mean the same thing, but they don’t. A bug is an insect with a mouth like a beak and a head that forms a triangle. A stinkbug is a bug. So is a bedbug, and so is a water strider, even though it doesn't have the word "bug" in its name.
+
+But a ladybug’s mouth doesn’t look like a beak. Its head isn’t shaped like a triangle. A ladybug isn’t a bug at all! It is a beetle. Beetles are insects with a pair of hard wings you can’t see through that hides a second pair of clear wings. The hard wings make a straight line down the top of the abdomen when they are closed.
+
+第3页：
+BUGS ARE INSECTS
+
+There are many kinds of insects living all around us. Ants are insects. So are crickets and mosquitoes. So are butterflies and bees.
+
+Insects come in many shapes, sizes, and colors. They don’t all look alike, but there's a way to tell if something is an insect. Count its legs. Count how many parts make up its body.
+
+Is a ladybug an insect?
+All insects have external skeletons. You have a hard skeleton inside, with parts that move. Your skeleton holds you up and helps give your body its shape. But an insect has a hard skeleton on the outside, with parts that move. The skeleton is like a shell around its body. It holds the insect up and gives its body its shape.
+A ladybug has an external skeleton. Does that mean it’s an insect?
+
+Maybe not. All insects have external skeletons, but not all animals with external skeletons are insects. Crabs, lobsters, shrimps, and scorpions have external skeletons too, but they are not insects.
+
+Many insects have two pairs of wings and a pair of antennae. Sometimes the antennae are long, like those of crickets or butterflies. Sometimes they are short.
+
+But all insect bodies are divided into three parts: head, thorax, and abdomen. There are six legs attached to the thorax. Anything that has six legs and three body parts is an insect. A ladybug has six legs and three body parts. Is it an insect?
+
+Now look at a spider. Is it an insect? It has an external skeleton. But count its legs. How many does it have? Now count how many body parts it has.
+A spider has eight legs, not six. Its body is divided into two parts, not three. So it is not an insect. A spider is an arachnid. Scorpions and daddy longlegs are arachnids too.
+
+Now we know that a ladybug is an insect. But is it really a bug?
+We sometimes call insects bugs. Many people think the two words mean the same thing, but they don’t. A bug is an insect with a mouth like a beak and a head that forms a triangle. A stinkbug is a bug. So is a bedbug, and so is a water strider, even though it doesn't have the word "bug" in its name.
+
+But a ladybug’s mouth doesn’t look like a beak. Its head isn’t shaped like a triangle. A ladybug isn’t a bug at all! It is a beetle. Beetles are insects with a pair of hard wings you can’t see through that hides a second pair of clear wings. The hard wings make a straight line down the top of the abdomen when they are closed.
+
+第4页：
+BUGS ARE INSECTS
+
+There are many kinds of insects living all around us. Ants are insects. So are crickets and mosquitoes. So are butterflies and bees.
+
+Insects come in many shapes, sizes, and colors. They don’t all look alike, but there's a way to tell if something is an insect. Count its legs. Count how many parts make up its body.
+
+Is a ladybug an insect?
+All insects have external skeletons. You have a hard skeleton inside, with parts that move. Your skeleton holds you up and helps give your body its shape. But an insect has a hard skeleton on the outside, with parts that move. The skeleton is like a shell around its body. It holds the insect up and gives its body its shape.
+A ladybug has an external skeleton. Does that mean it’s an insect?
+
+Maybe not. All insects have external skeletons, but not all animals with external skeletons are insects. Crabs, lobsters, shrimps, and scorpions have external skeletons too, but they are not insects.
+
+Many insects have two pairs of wings and a pair of antennae. Sometimes the antennae are long, like those of crickets or butterflies. Sometimes they are short.
+
+But all insect bodies are divided into three parts: head, thorax, and abdomen. There are six legs attached to the thorax. Anything that has six legs and three body parts is an insect. A ladybug has six legs and three body parts. Is it an insect?
+
+Now look at a spider. Is it an insect? It has an external skeleton. But count its legs. How many does it have? Now count how many body parts it has.
+A spider has eight legs, not six. Its body is divided into two parts, not three. So it is not an insect. A spider is an arachnid. Scorpions and daddy longlegs are arachnids too.
+
+Now we know that a ladybug is an insect. But is it really a bug?
+We sometimes call insects bugs. Many people think the two words mean the same thing, but they don’t. A bug is an insect with a mouth like a beak and a head that forms a triangle. A stinkbug is a bug. So is a bedbug, and so is a water strider, even though it doesn't have the word "bug" in its name.
+
+But a ladybug’s mouth doesn’t look like a beak. Its head isn’t shaped like a triangle. A ladybug isn’t a bug at all! It is a beetle. Beetles are insects with a pair of hard wings you can’t see through that hides a second pair of clear wings. The hard wings make a straight line down the top of the abdomen when they are closed.
+
+第5页：
+Different kinds of insects have different kinds of legs as well.
+Crickets have long back legs for jumping. Water boatmen have wide, flat legs for paddling. Bees have fuzzy legs that can carry pollen from flower to flower. Grasshoppers have legs for making music.
+
+Some insects are good builders. Ants build tunnels. Bees build honeycombs of wax that comes from their bodies. Wasps build paper nests. These insects live in large communities where each helps the others.
+
+No matter what they look like or how they live, all insects have six legs and three body parts. Here are some of the creatures you might find in your backyard. Are they insects?
+
+Insects are all around—flying through the air, chewing on leaves, creeping through grass. Scientists think that there are more kinds of insects than there are kinds of fish or birds or any other animal in the world. Look in your own backyard and see how many insects you can find. And always remember to count their legs!
+
+FIND OUT MORE ABOUT INSECTS
+* Make an insect calendar. On a big piece of paper, make a calendar for a week beginning with Sunday. Each day, look for insects in your backyard and write down which ones you recognized. At the end of the week, count how many different insects you saw.
+* Draw a picture of the most interesting insect you saw or will draw it bigger than it is. Fill up the whole page. Then tell why you found it interesting. Don’t forget to count its legs as you draw your picture!
+* Ask an adult to help mark off one square yard of ground in your backyard or park. Count how many insects you can find in that space. Try this in different areas—in sun, shade, grass, or dirt. Do you see more insects in some places?
+* Butterflies are attracted to certain plants. Ask an adult to help you plant a garden in your backyard or in a window box that will attract butterflies. Some flowers that butterflies are attracted to are bee balm, sunflowers, coneflowers, petunias, hibiscus, impatiens, zinnias, and phlox. You can buy seeds or young plants at a nursery or gardening store. Choose flowers that like the same conditions you best when you live. Plant your garden in a sunny spot sheltered from the wind. Do not use pesticides. Place a small dish of full water in a protected spot and change the water often. Butterflies will come to drink. Watch them closely, but don’t try to catch them; butterflies, though they are quite beautiful, if you touch them.
+
+You can explore the website of the Entomological Society of America for more information about insects and bugs.
+
+These are the kinds of insects and other animals that you have seen in Bugs Alive! Are from left to right:
+tiger beetle
+page 4: ladybug
+page 5: firefly, ant, cricket
+page 6: mosquito, monarch butterfly, honeybee
+page 7: stink bug, winged seed beetles
+page 8: grasshopper, praying mantis, water skater
+page 9: ladybug
+page 10: dragonfly, blue crab, shrimp
+page 11: beetle
+page 12: yellowjacket
+page 13: carpenter ant, Colorado potato beetle
+page 14-15: carpenter ant, ladybug
+page 16-17: garden spider
+page 18: praying mantis, bumble bee
+page 19: water strider
+page 20-21: ladybugs
+page 22: monarch butterfly
+page 23: grasshopper, hover mouse
+page 24: green bottle fly
+page 25: dragonfly, cicada
+page 26: praying mantis
+page 27: woolly bear
+page 28: spider, orb-weaving woodlouse, bee, carpenter drill bug, cricket, honeybee
+page 29: grasshopper, green lacewing, ladybug, bumble bee, moth, praying mantis
+page 31: mostly European grasshoppers, ladybug, bumble bee, moth
+
+第6页：
+BUGS ARE INSECTS
+
+There are many kinds of insects living all around us. Ants are insects. So are crickets and mosquitoes. So are butterflies and bees.
+
+Insects come in many shapes, sizes, and colors. They don’t all look alike, but there's a way to tell if something is an insect. Count its legs. Count how many parts make up its body.
+
+Is a ladybug an insect?
+All insects have external skeletons. You have a hard skeleton inside, with parts that move. Your skeleton holds you up and helps give your body its shape. But an insect has a hard skeleton on the outside, with parts that move. The skeleton is like a shell around its body. It holds the insect up and gives its body its shape.
+A ladybug has an external skeleton. Does that mean it’s an insect?
+
+Maybe not. All insects have external skeletons, but not all animals with external skeletons are insects. Crabs, lobsters, shrimps, and scorpions have external skeletons too, but they are not insects.
+
+Many insects have two pairs of wings and a pair of antennae. Sometimes the antennae are long, like those of crickets or butterflies. Sometimes they are short.
+
+But all insect bodies are divided into three parts: head, thorax, and abdomen. There are six legs attached to the thorax. Anything that has six legs and three body parts is an insect. A ladybug has six legs and three body parts. Is it an insect?
+
+Now look at a spider. Is it an insect? It has an external skeleton. But count its legs. How many does it have? Now count how many body parts it has.
+A spider has eight legs, not six. Its body is divided into two parts, not three. So it is not an insect. A spider is an arachnid. Scorpions and daddy longlegs are arachnids too.
+
+Now we know that a ladybug is an insect. But is it really a bug?
+We sometimes call insects bugs. Many people think the two words mean the same thing, but they don’t. A bug is an insect with a mouth like a beak and a head that forms a triangle. A stinkbug is a bug. So is a bedbug, and so is a water strider, even though it doesn't have the word "bug" in its name.
+
+But a ladybug’s mouth doesn’t look like a beak. Its head isn’t shaped like a triangle. A ladybug isn’t a bug at all! It is a beetle. Beetles are insects with a pair of hard wings you can’t see through that hides a second pair of clear wings. The hard wings make a straight line down the top of the abdomen when they are closed.

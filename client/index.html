@@ -55,6 +55,18 @@
                         <div id="aiResponse" class="response-content"></div>
                     </div>
                     
+                    <!-- 输出文件夹管理 -->
+                    <div class="output-folders-manager" style="margin-bottom: 15px; padding: 10px; background-color: #f8f8f8; border-radius: 8px;">
+                        <h3 style="margin-top: 0;">处理结果文件夹</h3>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                            <select id="output-folders-select" class="settings-input" style="flex-grow: 1;">
+                                <option value="">选择文件夹...</option>
+                            </select>
+                            <button id="refresh-folders-btn" class="control-btn" style="background: #1890ff; color: #fff;">刷新</button>
+                            <button id="delete-folder-btn" class="control-btn" style="background: #ff4d4f; color: #fff;">删除</button>
+                        </div>
+                    </div>
+                    
                     <!-- 自定义提示词按钮（放在中间） -->
                     <div class="prompt-buttons">
                         <div class="preset-prompts">
@@ -64,16 +76,20 @@
                         </div>
                     </div>
                     
-                    <!-- 文件选择与上传全部截图操作按钮 -->
+                    <!-- 文件选择操作按钮 -->
                     <div class="prompt-actions">
                         <input type="file" id="fileUpload" multiple accept="image/*,.pdf" style="display:none" />
                         <button id="selectFilesBtn" class="prompt-btn">选择文件</button>
-                        <button id="uploadAllBtn" class="prompt-btn">上传全部截图</button>
                     </div>
                     
                     <!-- 提示词输入区域（放在底部） -->
                     <div class="prompt-input-container">
                         <textarea id="mainPrompt" placeholder="输入提示词..."></textarea>
+                        <!-- 朗读开关 -->
+                        <label for="speechToggle" style="display: flex; align-items: center; margin: 0 8px; cursor: pointer;">
+                            <input type="checkbox" id="speechToggle" style="margin-right: 4px;">
+                            朗读
+                        </label>
                         <button id="sendPromptBtn" class="send-btn">发送</button>
                     </div>
                 </div>
@@ -85,7 +101,9 @@
                 <!-- 删除所有图片按钮 -->
                 <button id="delete-all-btn" class="control-btn" style="background:#ff4d4f;color:#fff; margin-right: 8px;">删除所有图片</button>
                 <!-- 添加新图片按钮 -->
-                <button id="add-btn" class="control-btn" style="background:#52c41a;color:#fff;">添加</button>
+                <button id="add-btn" class="control-btn" style="background:#52c41a;color:#fff; margin-right: 8px;">添加</button>
+                <!-- 处理图片按钮 -->
+                <button id="process-images-btn" class="control-btn" style="background:#1890ff;color:#fff;">处理图片</button>
                 <!-- 隐藏文件选择输入框 -->
                 <input type="file" id="add-input" accept="image/*" style="display:none" />
                 <div id="image-manager-container"></div>

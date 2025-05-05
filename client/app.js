@@ -241,36 +241,49 @@ function initAIPage() {
     const mainPrompt = document.getElementById('mainPrompt');
     const sendPromptBtn = document.getElementById('sendPromptBtn');
     const selectFilesBtn = document.getElementById('selectFilesBtn');
-    const uploadAllBtn = document.getElementById('uploadAllBtn');
     const fileInput = document.getElementById('fileUpload');
+    const outputFoldersSelect = document.getElementById('output-folders-select');
+    const refreshFoldersBtn = document.getElementById('refresh-folders-btn');
+    const deleteFolderBtn = document.getElementById('delete-folder-btn');
+    const speechToggle = document.getElementById('speechToggle');
     
-    // 添加"使用图片"按钮
-    const useImagesBtn = document.createElement('button');
-    useImagesBtn.className = 'control-btn use-images-btn';
-    useImagesBtn.textContent = '使用图片模式';
-    useImagesBtn.title = '添加#使用图片标记，切换到图片对话模式';
-    useImagesBtn.style.backgroundColor = '#13c2c2';
-    useImagesBtn.style.marginRight = '10px';
+    // 加载输出文件夹列表
+    loadOutputFolders();
     
-    // 插入到发送按钮之前
-    sendPromptBtn.parentNode.insertBefore(useImagesBtn, sendPromptBtn);
+    // 刷新按钮事件
+    if (refreshFoldersBtn) {
+        refreshFoldersBtn.addEventListener('click', loadOutputFolders);
+    }
     
-    // 添加点击事件
-    useImagesBtn.addEventListener('click', () => {
-        // 如果提示词结尾已经有#使用图片标记，则移除
-        if (mainPrompt.value.trim().endsWith('#使用图片')) {
-            mainPrompt.value = mainPrompt.value.replace(/#使用图片$/, '').trim();
-            useImagesBtn.textContent = '使用图片模式';
-            useImagesBtn.style.backgroundColor = '#13c2c2';
-        } else {
-            // 添加标记到提示词结尾
-            mainPrompt.value = mainPrompt.value.trim() + ' #使用图片';
-            useImagesBtn.textContent = '纯文本模式';
-            useImagesBtn.style.backgroundColor = '#722ed1';
-        }
-        // 聚焦回文本框
-        mainPrompt.focus();
-    });
+    // 删除文件夹按钮事件
+    if (deleteFolderBtn && outputFoldersSelect) {
+        deleteFolderBtn.addEventListener('click', async () => {
+            const selectedFolder = outputFoldersSelect.value;
+            if (!selectedFolder) {
+                alert('请先选择要删除的文件夹');
+                return;
+            }
+            
+            if (confirm(`确定要删除文件夹 "${selectedFolder}" 及其所有内容吗？`)) {
+                try {
+                    const response = await fetch(`/api/output-folders/${encodeURIComponent(selectedFolder)}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        alert('文件夹删除成功');
+                        loadOutputFolders(); // 刷新列表
+                    } else {
+                        const errorText = await response.text();
+                        alert(`删除失败: ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error('删除文件夹出错:', error);
+                    alert(`删除出错: ${error.message}`);
+                }
+            }
+        });
+    }
     
     // 预设提示词按钮
     promptBtns.forEach(btn => {
@@ -347,6 +360,14 @@ function initAIPage() {
             // 清空文件输入，允许重新上传相同文件
             fileInput.value = '';
             
+            // 刷新输出文件夹列表
+            loadOutputFolders();
+            
+            // 如果朗读开关打开，语音朗读 AI 响应内容
+            if (speechToggle && speechToggle.checked) {
+                speakText(result.content);
+            }
+            
         } catch (error) {
             console.error('文件上传失败:', error);
             aiResponse.innerHTML = `
@@ -358,31 +379,176 @@ function initAIPage() {
         }
     });
     
-    // 上传全部截图按钮
-    uploadAllBtn.addEventListener('click', async () => {
-        const aiResponse = document.getElementById('aiResponse');
-        aiResponse.textContent = '正在获取截图列表...';
+    // 发送提示词按钮
+    sendPromptBtn.addEventListener('click', () => {
+        // 如果开启朗读，预调用空朗读以解锁移动端语音通道
+        if (speechToggle && speechToggle.checked && window.speechSynthesis) {
+            try {
+                const unlockUtter = new SpeechSynthesisUtterance('');
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(unlockUtter);
+            } catch (e) {
+                console.warn('TTS 解锁失败:', e);
+            }
+        }
+        // 正式处理提示词
+        processPrompt();
+    });
+    
+    // 输入框按Ctrl+Enter发送
+    mainPrompt.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            processPrompt();
+        }
+    });
+    
+    /**
+     * 加载输出文件夹列表
+     */
+    async function loadOutputFolders() {
         try {
-            const resp = await fetch('/api/images');
-            const images = await resp.json();
+            if (!outputFoldersSelect) return;
             
-            if (images.length === 0) {
-                aiResponse.textContent = '没有可用的截图，请先在"实时监控"标签页截取图片';
-                return;
+            // 显示加载中
+            outputFoldersSelect.innerHTML = '<option value="">加载中...</option>';
+            
+            const response = await fetch('/api/output-folders');
+            
+            if (!response.ok) {
+                throw new Error(`获取文件夹列表失败: ${response.status}`);
             }
             
-            // 显示正在处理信息
-            aiResponse.innerHTML = `
-                <div style="padding: 10px; background-color: #e6f7ff; border-radius: 4px; margin-bottom: 15px;">
-                    <p>正在处理 ${images.length} 张截图...</p>
-                </div>
-            `;
+            const folders = await response.json();
             
-            // 创建FormData对象用于上传
-            const formData = new FormData();
+            // 清空并重新填充下拉列表
+            outputFoldersSelect.innerHTML = '<option value="">选择文件夹...</option>';
             
-            // 添加提示词（自动添加#使用图片标记）
-            formData.append('prompt', '请描述这些图片内容 #使用图片');
+            folders.forEach(folder => {
+                const option = document.createElement('option');
+                option.value = folder;
+                option.textContent = folder;
+                outputFoldersSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('加载输出文件夹列表失败:', error);
+            outputFoldersSelect.innerHTML = '<option value="">加载失败</option>';
+        }
+    }
+    
+    /**
+     * 处理提示词并与AI交互
+     */
+    async function processPrompt() {
+        const aiResponse = document.getElementById('aiResponse');
+        const mainPrompt = document.getElementById('mainPrompt');
+        const outputFoldersSelect = document.getElementById('output-folders-select');
+        const selectedFolder = outputFoldersSelect.value;
+        const prompt = mainPrompt.value.trim();
+        
+        if (!prompt) {
+            return; // 提示词为空，不处理
+        }
+        
+        // 获取文件夹内容和对话历史
+        let documentContent = "";
+        let conversationHistory = [];
+        
+        if (selectedFolder) {
+            try {
+                const folderContentResponse = await fetch(`/api/folder-content/${encodeURIComponent(selectedFolder)}`);
+                if (folderContentResponse.ok) {
+                    const folderContent = await folderContentResponse.json();
+                    documentContent = folderContent.document_content || "";
+                    conversationHistory = folderContent.conversation_history || [];
+                } else {
+                    console.error('获取文件夹内容失败:', await folderContentResponse.text());
+                }
+            } catch (folderError) {
+                console.error('获取文件夹内容出错:', folderError);
+            }
+        }
+        
+        // 获取模型配置
+        let modelConfig = JSON.parse(localStorage.getItem('MODEL_CONFIG') || '{}');
+        
+        // 如果本地存储没有，则从API获取
+        if (!modelConfig.modelName) {
+            try {
+                const settingsResponse = await fetch('/api/settings');
+                if (settingsResponse.ok) {
+                    const settings = await settingsResponse.json();
+                    modelConfig = {
+                        provider: settings.AI_PROVIDER || 'zhipu',
+                        modelName: settings.MODEL_NAME || 'glm-4-air',
+                        apiKey: settings.API_KEY || ''
+                    };
+                }
+            } catch (e) {
+                console.error('无法获取模型配置:', e);
+            }
+        }
+        
+        // 获取系统提示词
+        let systemPrompt = window.localStorage.getItem('MAIN_SYSTEM_PROMPT') || '';
+        // 如果localStorage中没有，尝试从settings获取
+        if (!systemPrompt) {
+            try {
+                const settingsResp = await fetch('/api/settings');
+                const settings = await settingsResp.json();
+                systemPrompt = settings.MAIN_SYSTEM_PROMPT || '';
+            } catch (e) {
+                console.error('获取系统提示词失败', e);
+            }
+        }
+        
+        // 构建新的提示词，包含文档内容和对话历史
+        let enhancedPrompt = prompt.trim();
+        
+        // 如果有文档内容，添加到提示词中
+        if (documentContent) {
+            enhancedPrompt = `以下是参考文档内容：
+${documentContent}
+
+以下是之前的对话历史：
+${conversationHistory.map(item => `${item.role === 'user' ? '用户' : 'AI'}：${item.content}`).join('\n')}
+
+用户现在的问题是：
+${prompt}
+
+请结合文档内容和上下文回答问题。`;
+        }
+        
+        // 清空响应区域并显示加载状态
+        aiResponse.innerHTML = `
+            <div class="loading">
+                <p>AI 处理中...</p>
+            </div>
+        `;
+        
+        try {
+            // 清空输入框
+            mainPrompt.value = '';
+            
+            // 获取模型配置
+            let modelConfig = JSON.parse(localStorage.getItem('MODEL_CONFIG') || '{}');
+            
+            // 如果本地存储没有，则从API获取
+            if (!modelConfig.modelName) {
+                try {
+                    const settingsResponse = await fetch('/api/settings');
+                    if (settingsResponse.ok) {
+                        const settings = await settingsResponse.json();
+                        modelConfig = {
+                            provider: settings.AI_PROVIDER || 'zhipu',
+                            modelName: settings.MODEL_NAME || 'glm-4-air',
+                            apiKey: settings.API_KEY || ''
+                        };
+                    }
+                } catch (e) {
+                    console.error('无法获取模型配置:', e);
+                }
+            }
             
             // 获取系统提示词
             let systemPrompt = window.localStorage.getItem('MAIN_SYSTEM_PROMPT') || '';
@@ -397,240 +563,62 @@ function initAIPage() {
                 }
             }
             
-            if (systemPrompt) {
-                formData.append('system_prompt', systemPrompt);
-            }
-            
-            // 循环获取图片并添加到FormData
-            const fetchPromises = images.map(async (img) => {
-                try {
-                    // 获取图片文件
-                    const imgResponse = await fetch(`/api/shots/${img}`);
-                    const imgBlob = await imgResponse.blob();
-                    
-                    // 添加到FormData，使用原始文件名
-                    formData.append('files', new File([imgBlob], img, {
-                        type: imgBlob.type
-                    }));
-                    
-                    return true;
-                } catch (err) {
-                    console.error(`获取图片 ${img} 失败:`, err);
-                    return false;
-                }
-            });
-            
-            // 等待所有图片获取完成
-            await Promise.all(fetchPromises);
-            
-            // 上传图片并发送到智谱API
-            const uploadResponse = await fetch('/api/zhipu/process_images', {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (!uploadResponse.ok) {
-                throw new Error(`上传错误: ${uploadResponse.status} - ${await uploadResponse.text()}`);
-            }
-            
-            const result = await uploadResponse.json();
-            
-            // 显示结果
-            aiResponse.innerHTML = `
-                <div class="ai-result">
-                    <p class="ai-model">处理完成</p>
-                    <div class="ai-content">${formatMarkdown(result.content)}</div>
-                </div>
-            `;
-            
-        } catch (error) {
-            console.error('上传截图失败:', error);
-            aiResponse.innerHTML = `
-                <div style="color: #ff4d4f; padding: 10px; border: 1px solid #ff4d4f; border-radius: 5px;">
-                    <p><strong>上传失败</strong></p>
-                    <p>${error.message}</p>
-                </div>
-            `;
-        }
-    });
-    
-    // 发送提示词按钮
-    sendPromptBtn.addEventListener('click', async () => {
-        await processPrompt();
-    });
-    
-    // 支持在文本框中按Enter键发送
-    mainPrompt.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter' && e.ctrlKey) {
-            e.preventDefault();
-            await processPrompt();
-        }
-    });
-    
-    /**
-     * 处理提示词并与AI交互
-     */
-    async function processPrompt() {
-        const prompt = mainPrompt.value.trim();
-        
-        if (!prompt) {
-            alert('请输入提示词');
-            return;
-        }
-        
-        // 设置加载状态
-        const aiResponse = document.getElementById('aiResponse');
-        aiResponse.textContent = '思考中...';
-        
-        try {
-            // 获取当前激活的模型配置
-            const modelConfig = await window.getActiveModelConfig();
-            
-            // 检查是否需要使用图片（在提示词中添加特殊标记）
-            const useImages = prompt.toLowerCase().includes('#使用图片') || prompt.toLowerCase().includes('#useimages');
-            
-            // 准备最终提示词（移除特殊标记）
-            let finalPrompt = prompt.replace(/#使用图片/gi, '').replace(/#useimages/gi, '').trim();
-            
-            // 获取系统提示词
-            let systemPrompt = "";
-            if (modelConfig.model === 'zhipu') {
-                systemPrompt = window.localStorage.getItem('MAIN_SYSTEM_PROMPT') || '';
-                // 如果localStorage中没有，尝试从settings获取
-                if (!systemPrompt) {
-                    try {
-                        const settingsResp = await fetch('/api/settings');
-                        const settings = await settingsResp.json();
-                        systemPrompt = settings.MAIN_SYSTEM_PROMPT || '';
-                    } catch (e) {
-                        console.error('获取系统提示词失败', e);
-                    }
-                }
-            }
-            
-            // 根据不同模型调用不同API
+            // 默认使用智谱API
             let result;
             
-            if (modelConfig.model === 'zhipu') {
-                // 显示处理中状态
-                aiResponse.innerHTML = `
-                    <div style="margin-bottom: 10px; color: #1890ff;">
-                        <p>正在使用智谱 ${modelConfig.modelName} 处理中...</p>
-                        <p><small>模型名称: ${modelConfig.modelName}</small></p>
-                        <p><small>模式: ${useImages ? '多模态(图片)' : '纯文本'}</small></p>
-                    </div>
-                `;
-                
+            if (modelConfig.provider === 'zhipu') {
                 try {
-                    // 如果需要使用图片
-                    if (useImages) {
-                        // 从服务器获取所有图片
-                        const imagesResponse = await fetch('/api/images');
-                        const images = await imagesResponse.json();
-                        
-                        if (images.length === 0) {
-                            aiResponse.textContent = '没有可用的图片，请先截取或上传图片';
-                            return;
-                        }
-                        
-                        // 调用智谱API（多模态）
-                        const zhipuResponse = await fetch('/api/zhipu/process_server_images', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                prompt: finalPrompt,
-                                image_paths: images.map(img => `${window.location.protocol}//${window.location.hostname}:8000/shots/${img}`),
-                                system_prompt: systemPrompt
-                            })
-                        });
-                        
-                        if (!zhipuResponse.ok) {
-                            let errorMessage = await zhipuResponse.text();
-                            try {
-                                // 尝试解析为JSON
-                                const errorJson = JSON.parse(errorMessage);
-                                if (errorJson.detail) {
-                                    errorMessage = errorJson.detail;
-                                }
-                            } catch (e) {
-                                // 不是JSON，保持原样
-                            }
-                            
-                            throw new Error(`API错误(${zhipuResponse.status}): ${errorMessage}`);
-                        }
-                        
-                        result = await zhipuResponse.json();
-                    } else {
-                        // 使用纯文本API
-                        const textResponse = await fetch('/api/zhipu/chat_text', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                prompt: finalPrompt,
-                                system_prompt: systemPrompt
-                            })
-                        });
-                        
-                        if (!textResponse.ok) {
-                            throw new Error(`API错误: ${textResponse.status} - ${await textResponse.text()}`);
-                        }
-                        
-                        result = await textResponse.json();
+                    const textResponse = await fetch('/api/zhipu/chat_text', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            prompt: enhancedPrompt,
+                            system_prompt: systemPrompt
+                        })
+                    });
+                    
+                    if (!textResponse.ok) {
+                        throw new Error(`API错误: ${textResponse.status} - ${await textResponse.text()}`);
                     }
+                    
+                    result = await textResponse.json();
                     
                     // 显示结果
                     aiResponse.innerHTML = `
                         <div class="ai-result">
-                            <p class="ai-model">使用模型: 智谱 ${modelConfig.modelName} ${useImages ? '(多模态)' : '(纯文本)'}</p>
+                            <p class="ai-model">使用模型: 智谱 ${modelConfig.modelName} (纯文本)</p>
                             <div class="ai-content">${formatMarkdown(result.content)}</div>
                         </div>
                     `;
-                } catch (apiError) {
-                    console.error('API错误:', apiError);
                     
-                    // 如果多模态模式失败，尝试纯文本模式
-                    if (useImages) {
-                        aiResponse.innerHTML += `
-                            <div style="margin: 10px 0; color: #faad14;">
-                                <p>图像处理API出错: ${apiError.message}</p>
-                                <p>正在尝试使用纯文本API作为备选...</p>
-                            </div>
-                        `;
-                        
+                    // 如果选择了文件夹，更新对话历史
+                    if (selectedFolder) {
                         try {
-                            const textResponse = await fetch('/api/zhipu/chat_text', {
+                            await fetch(`/api/update-conversation/${encodeURIComponent(selectedFolder)}`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                    prompt: finalPrompt,
-                                    system_prompt: systemPrompt
+                                    user_input: prompt,
+                                    ai_response: result.content
                                 })
                             });
-                            
-                            if (!textResponse.ok) {
-                                throw new Error(`纯文本API错误: ${textResponse.status} - ${await textResponse.text()}`);
-                            }
-                            
-                            result = await textResponse.json();
-                            
-                            aiResponse.innerHTML = `
-                                <div class="ai-result">
-                                    <p class="ai-model">使用模型: 智谱 ${modelConfig.modelName} (纯文本模式)</p>
-                                    <div class="ai-content">${formatMarkdown(result.content)}</div>
-                                </div>
-                            `;
-                        } catch (textApiError) {
-                            throw new Error(`所有API尝试均失败: ${apiError.message}; 纯文本API: ${textApiError.message}`);
+                        } catch (updateError) {
+                            console.error('更新对话历史出错:', updateError);
                         }
-                    } else {
-                        throw apiError; // 直接抛出错误
                     }
+                    
+                    // 如果朗读开关打开，语音朗读 AI 响应内容
+                    if (speechToggle && speechToggle.checked) {
+                        speakText(result.content);
+                    }
+                } catch (apiError) {
+                    console.error('API错误:', apiError);
+                    
+                    throw apiError; // 直接抛出错误
                 }
             } else {
                 // 其他模型处理（未来扩展）
@@ -796,4 +784,16 @@ function stopMonitoring() {
         socket.close();
         socket = null;
     }
+}
+
+// 全局语音朗读函数
+/**
+ * 语音朗读文字：中文用中文，英文用英文
+ */
+function speakText(text) {
+    if (!window.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    // 简单语言检测：中文字符则使用中文
+    utterance.lang = /[\u4e00-\u9fa5]/.test(text) ? 'zh-CN' : 'en-US';
+    window.speechSynthesis.speak(utterance);
 } 
