@@ -48,6 +48,10 @@ SHOTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "shots")
 # 设置输出目录路径
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output")
 
+# 确保目录存在
+os.makedirs(SHOTS_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 # 挂载截图静态目录
 app.mount("/shots", StaticFiles(directory=SHOTS_DIR), name="shots")
 
