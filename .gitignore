@@ -16,21 +16,18 @@ client/node_modules/
 
 # 忽略日志和调试文件
 *.log
+*.md
+*.json
+*.jpeg
+
 
 # 忽略环境变量配置文件
 .env
 
 pic
 
-server/temp/
+
 
 # 忽略截图目录
-server/shots/
-shots/
 
 # 忽略本地脚本和文档
-success_code.md
-start_https.sh
-stop_all_servers.sh
-flip_monitor_mediapipe.py
-mediapipe_demo.py 
