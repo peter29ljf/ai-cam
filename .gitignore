@@ -18,16 +18,10 @@ client/node_modules/
 *.log
 *.md
 *.json
-*.jpeg
-
 
 # 忽略环境变量配置文件
 .env
 
 pic
-
-
-
-# 忽略截图目录
 
 # 忽略本地脚本和文档
